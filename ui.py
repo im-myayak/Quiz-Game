@@ -1,6 +1,7 @@
 import time
 from tkinter import *
 from quiz_brain import QuizBrain
+from data import QUESTIONS_NUMBERS as DATA_QUESTIONS_AMOUNT
 
 THEME_COLOR = "#375362"
 
@@ -14,6 +15,8 @@ class QuizInterface:
         self.window.configure(bg=THEME_COLOR, padx=20, pady=20)
         self.score_label = Label(self.window, text=f"Score: 0", bg=THEME_COLOR, fg="white")
         self.score_label.grid(row=0, column=1)
+        self.questionTrack_label = Label(self.window, text=f"", bg=THEME_COLOR, fg="white")
+        self.questionTrack_label.grid(row=0, column=0)
         self.q_container = Canvas(self.window, width=300, height=250)
         self.question_text = self.q_container.create_text(150,
                                                           125,
@@ -38,10 +41,10 @@ class QuizInterface:
             next_question = self.quiz.next_question()
             self.q_container.itemconfig(self.question_text, text=next_question)
         else:
+            self.q_container.configure(bg="blue")
             self.q_container.itemconfig(self.question_text, text="Quiz Completed")
             self.false_btn_img.config(state=DISABLED)
             self.true_btn_img.config(state=DISABLED)
-
 
     def false_button(self):
         self.give_feedback(self.quiz.check_answer("False"))
@@ -55,5 +58,5 @@ class QuizInterface:
             self.q_container.configure(bg="green")
         else:
             self.q_container.configure(bg="red")
-
-        self.window.after(1000, self.get_next_question)
+        self.questionTrack_label.configure(text=f"{self.quiz.question_number} / {DATA_QUESTIONS_AMOUNT}")
+        self.window.after(750, self.get_next_question)
